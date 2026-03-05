@@ -6,7 +6,7 @@
 """
 
 import pytest
-from core.validators import (
+from validators import (
     validate_queue_input,
     validate_service_time,
     validate_pin,
