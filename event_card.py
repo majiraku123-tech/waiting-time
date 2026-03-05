@@ -83,17 +83,16 @@ def render_event_card(event: dict, metrics: QueueMetrics, show_details: bool = T
     last_updated = event.get("last_updated_at", "")
     last_updated_display = last_updated[11:16] if last_updated and len(last_updated) >= 16 else "未更新"
 
-    card_html = f"""
+    full_card_html = f"""
     <div style="
         background: {style['bg']};
         border: 2px solid {style['border']};
         border-radius: 16px;
         padding: 18px 20px;
         margin-bottom: 12px;
-        transition: transform 0.2s;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        font-family: sans-serif;
     ">
-        <!-- ヘッダー行 -->
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
             <div>
                 <span style="font-size: 1.5rem;">{emoji}</span>
@@ -105,34 +104,27 @@ def render_event_card(event: dict, metrics: QueueMetrics, show_details: bool = T
                     📍 {classroom} ・ {category}
                 </span>
             </div>
-            <div style="text-align: right;">
-                <div style="
-                    background: {style['border']};
-                    color: white;
-                    border-radius: 20px;
-                    padding: 4px 12px;
-                    font-size: 0.8rem;
-                    font-weight: 600;
-                    white-space: nowrap;
-                ">
-                    {status_info['emoji']} {status_info['label']}
-                </div>
+            <div style="
+                background: {style['border']};
+                color: white;
+                border-radius: 20px;
+                padding: 4px 12px;
+                font-size: 0.8rem;
+                font-weight: 600;
+            ">
+                {status_info['emoji']} {status_info['label']}
             </div>
         </div>
 
-        <!-- メトリクス行 -->
-        <div style="display: flex; gap: 24px; margin-bottom: 10px; flex-wrap: wrap;">
-            <div>
-                <span style="font-size: 1.5rem; font-weight: 800; color: {wait_color};">{wait_display}</span>
-            </div>
-            <div style="color: #64748B; font-size: 0.9rem; padding-top: 6px;">
+        <div style="display: flex; gap: 24px; margin-bottom: 10px; align-items: baseline;">
+            <span style="font-size: 1.5rem; font-weight: 800; color: {wait_color};">{wait_display}</span>
+            <span style="color: #64748B; font-size: 0.9rem;">
                 👥 <strong>{queue_length}人</strong> 並び中
                 &nbsp;&nbsp;
                 <span style="color: {trend_color}; font-size: 1.1rem; font-weight: 700;">{trend_arrow}</span>
-            </div>
+            </span>
         </div>
 
-        <!-- 利用率バー -->
         <div style="margin-bottom: 6px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
                 <span style="font-size: 0.78rem; color: #64748B;">混雑度 ρ = {utilization:.2f}</span>
@@ -143,14 +135,13 @@ def render_event_card(event: dict, metrics: QueueMetrics, show_details: bool = T
                     width: {util_pct}%;
                     height: 100%;
                     background: {util_bar_color};
-                    border-radius: 999px;
                     transition: width 0.5s ease;
                 "></div>
             </div>
         </div>
     </div>
     """
-    st.markdown(card_html, unsafe_allow_html=True)
+    st.markdown(full_card_html, unsafe_allow_html=True)
 
 
 def render_recommendation_banner(events: list, metrics_map: dict) -> None:
