@@ -9,7 +9,7 @@ M/M/1待ち行列モデルの単体テスト
 
 import math
 import pytest
-from core.queue_models import (
+from queue_models import (
     calculate_mm1_metrics,
     calculate_trend,
     determine_status,
