@@ -6,8 +6,9 @@ unsafe_allow_html=True を使用するが、全ての変数はサニタイズ済
 """
 
 import streamlit as st
-from core.queue_models import QueueMetrics, STATUS_CONFIG, calculate_trend
-from core.validators import sanitize_text_input
+# core. を消す
+from queue_models import QueueMetrics, STATUS_CONFIG, calculate_trend
+from validators import sanitize_text_input
 
 
 def get_status_style(status: str) -> dict:
