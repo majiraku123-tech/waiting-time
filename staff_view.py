@@ -9,11 +9,11 @@ PIN認証（PIN: 1234）でアクセス可能。
 import streamlit as st
 from datetime import datetime
 
-from core.data_manager import get_all_events, update_queue_length, add_anomaly_alert
-from core.queue_models import calculate_mm1_metrics
-from core.validators import validate_queue_input
-from core.security import validate_permission
-
+# core. をすべて削除
+from data_manager import get_all_events, update_queue_length, add_anomaly_alert
+from queue_models import calculate_mm1_metrics
+from validators import validate_queue_input
+from security import validate_permission
 
 def render_staff_view() -> None:
     """
