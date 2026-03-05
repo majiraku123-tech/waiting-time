@@ -11,7 +11,8 @@
 import pytest
 from unittest.mock import patch, MagicMock
 
-from core.security import (
+# core. を消す
+from security import (
     ROLES,
     verify_pin,
     create_session,
