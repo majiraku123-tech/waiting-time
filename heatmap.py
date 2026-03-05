@@ -8,7 +8,9 @@
 import plotly.graph_objects as go
 import numpy as np
 import streamlit as st
-from core.queue_models import QueueMetrics
+
+# core. を消す
+from queue_models import QueueMetrics
 
 
 # フロアマップのグリッド定義
