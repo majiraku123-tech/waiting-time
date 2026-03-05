@@ -14,15 +14,16 @@ Streamlit Cloud デプロイ：
 
 import streamlit as st
 
-from core.data_manager import load_initial_events
-from core.security import (
+from data_manager import load_initial_events
+from security import (
     ROLES, verify_pin, create_session, validate_session,
     logout, get_current_role_info,
 )
-from core.validators import validate_pin
-from views.visitor_view import render_visitor_view
-from views.staff_view import render_staff_view
-from views.admin_view import render_admin_view
+from validators import validate_pin
+
+from visitor_view import render_visitor_view
+from staff_view import render_staff_view
+from admin_view import render_admin_view
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
