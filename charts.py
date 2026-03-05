@@ -10,7 +10,9 @@ import plotly.graph_objects as go
 import plotly.express as px
 import streamlit as st
 from datetime import datetime
-from core.queue_models import STATUS_CONFIG
+
+# core. を消す
+from queue_models import STATUS_CONFIG
 
 
 # カラーパレット（ブランドカラーと一致）
