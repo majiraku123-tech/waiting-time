@@ -154,13 +154,6 @@ def render_event_card(event: dict, metrics: QueueMetrics, show_details: bool = T
 
 
 def render_recommendation_banner(events: list, metrics_map: dict) -> None:
-    """
-    AI穴場推薦バナーを表示する（ρ値が低いTOP3）。
-
-    Args:
-        events (list[dict]): 全イベントリスト
-        metrics_map (dict): {event_id: QueueMetrics} の辞書
-    """
     # 営業中のイベントをρ値で昇順ソート
     open_events = [e for e in events if e.get("is_open", True)]
     sorted_events = sorted(
@@ -168,16 +161,17 @@ def render_recommendation_banner(events: list, metrics_map: dict) -> None:
         key=lambda e: metrics_map.get(e["id"], type("", (), {"utilization": 1.0})()).utilization
     )
 
-    # TOP3を取得（利用率0.6未満のもの）
+    # しきい値を 0.8 に上げ、TOP3を取得
     recommendations = [
         e for e in sorted_events
-        if metrics_map.get(e["id"], type("", (), {"utilization": 1.0})()).utilization < 0.6
+        if metrics_map.get(e["id"], type("", (), {"utilization": 1.0})()).utilization < 0.8
     ][:3]
 
     if not recommendations:
         return
 
-    st.markdown("""
+    # --- ここから修正：HTMLを一つの変数に溜め込む ---
+    full_html = """
     <div style="
         background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
         border-radius: 16px;
@@ -188,29 +182,26 @@ def render_recommendation_banner(events: list, metrics_map: dict) -> None:
         <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 12px;">
             🤖 AI穴場レコメンド — 今すぐ行くべきイベント！
         </div>
-    """, unsafe_allow_html=True)
-
-    cols = st.columns(len(recommendations))
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+    """
 
     reason_templates = [
-        "到着率が低く、M/M/1モデルでρ={rho:.2f}の安定状態を維持しています。",
-        "サービス容量に対して来場者が少なく、待ち時間の心配がほぼありません。",
+        "到着率が低く、安定状態を維持しています。",
+        "サービス容量に対して来場者が少なく、穴場です。",
         "現在の行列は{queue}人のみ。すぐに体験できます！",
     ]
 
     for i, event in enumerate(recommendations):
         metrics = metrics_map.get(event["id"])
-        if not metrics:
-            continue
-
-        rho = metrics.utilization
-        queue = event["queue_length"]
-        reason_idx = i % len(reason_templates)
-        reason = reason_templates[reason_idx].format(rho=rho, queue=queue)
-
-        with cols[i]:
-            st.markdown(f"""
+        if not metrics: continue
+        
+        reason = reason_templates[i % len(reason_templates)].format(queue=event['queue_length'])
+        
+        # 各カードのHTMLを追加
+        full_html += f"""
             <div style="
+                flex: 1;
+                min-width: 200px;
                 background: rgba(255,255,255,0.2);
                 border-radius: 12px;
                 padding: 14px;
@@ -224,6 +215,9 @@ def render_recommendation_banner(events: list, metrics_map: dict) -> None:
                 </div>
                 <div style="font-size: 0.78rem; opacity: 0.8; line-height: 1.4;">{reason}</div>
             </div>
-            """, unsafe_allow_html=True)
+        """
 
-    st.markdown("</div>", unsafe_allow_html=True)
+    full_html += "</div></div>" # 全てのタグを閉じる
+
+    # 最後に一回だけ表示
+    st.markdown(full_html, unsafe_allow_html=True)
