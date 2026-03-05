@@ -15,7 +15,8 @@ import streamlit as st
 from dataclasses import dataclass
 from typing import List
 
-from core.queue_models import calculate_mm1_metrics, QueueMetrics
+# core. を消す
+from queue_models import calculate_mm1_metrics, QueueMetrics
 
 
 @dataclass
