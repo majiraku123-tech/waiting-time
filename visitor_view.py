@@ -7,12 +7,15 @@
 
 import random
 import streamlit as st
-import streamlit as st
+# stのインポートが2行あるので、1行にまとめてもOKです
 
-from core.data_manager import get_all_events
-from core.queue_models import calculate_mm1_metrics, QueueMetrics
-from components.event_card import render_event_card, render_recommendation_banner
-from components.quiz import render_quiz
+# core. を消す
+from data_manager import get_all_events
+from queue_models import calculate_mm1_metrics, QueueMetrics
+
+# components. を消す
+from event_card import render_event_card, render_recommendation_banner
+from quiz import render_quiz
 
 
 def render_visitor_view() -> None:
