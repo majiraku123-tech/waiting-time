@@ -12,15 +12,20 @@ import pandas as pd
 import streamlit as st
 from datetime import datetime
 
-from core.data_manager import (
+# core. を消す
+from data_manager import (
     get_all_events, update_queue_length, clear_anomaly_flag, add_anomaly_alert
 )
-from core.queue_models import calculate_mm1_metrics, QueueMetrics
-from core.security import validate_permission
-from core.validators import validate_export_request
-from components.charts import render_kpi_cards, render_time_series_chart, render_ranking_table, render_simulation_chart
-from components.heatmap import render_floor_heatmap
-from simulation.monte_carlo import render_monte_carlo_panel
+from queue_models import calculate_mm1_metrics, QueueMetrics
+from security import validate_permission
+from validators import validate_export_request
+
+# components. を消す
+from charts import render_kpi_cards, render_time_series_chart, render_ranking_table, render_simulation_chart
+from heatmap import render_floor_heatmap
+
+# simulation. を消す
+from monte_carlo import render_monte_carlo_panel
 
 
 def render_admin_view() -> None:
