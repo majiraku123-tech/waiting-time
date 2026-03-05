@@ -1,0 +1,64 @@
+name: 🧪 FestivalFlow AI — CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Run Tests & Coverage
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Supabase は CI では不要なため除外（アダプター設計の恩恵）
+          grep -v "^supabase" requirements.txt > requirements_ci.txt
+          pip install -r requirements_ci.txt
+
+      - name: 🔍 Lint with ruff
+        run: |
+          ruff check core/ tests/ --select E,F,W --ignore E501
+
+      - name: 🧪 Run tests with pytest
+        run: |
+          pytest tests/ -v \
+            --cov=core \
+            --cov-report=term-missing \
+            --cov-report=xml \
+            --cov-fail-under=75
+
+      - name: 📊 Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false
+
+  lint:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install black==24.4.2 ruff==0.4.7
+      - name: Check formatting with black
+        run: black --check core/ tests/
+      - name: Lint with ruff
+        run: ruff check core/ tests/
