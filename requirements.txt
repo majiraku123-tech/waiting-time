@@ -2,3 +2,6 @@ streamlit
 pandas
 scipy
 bcrypt
+plotly
+numpy
+pytest
